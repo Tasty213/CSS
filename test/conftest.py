@@ -10,5 +10,5 @@ def controll_board_off():
 
 @pytest.fixture
 def controll_board_on(controll_board_off: ControlBoard):
-    controll_board_off.submit_command("P 00 1")
-    return ControlBoard()
+    controll_board_off.submit_command("^P 00 1\n")
+    return controll_board_off
