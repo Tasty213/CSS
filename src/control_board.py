@@ -24,7 +24,7 @@ class ControlBoard:
                 )
 
     def echo(self, command: Command):
-        return f"E {command.sequence_number} OK_ {self.power_state}"
+        return f"^E {command.sequence_number} OK_ {self.power_state}\n"
 
     def power(self, command: Command):
         match command.arguments[0]:
@@ -33,4 +33,4 @@ class ControlBoard:
             case "1":
                 self.power_state = PowerState.ON
 
-        return f"E {command.sequence_number} OK_"
+        return f"^{ControlCodes.POWER} {command.sequence_number} OK_\n"
