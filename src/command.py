@@ -1,7 +1,10 @@
+import re
 from control_codes import ControlCodes
 
 
 class Command:
+    SEQUENCE_NUMBER_REGEX = r"^\d+$"
+
     def __init__(self, command: str):
         self.validate(command)
         command = self.remove_control_characters(command)
@@ -13,6 +16,12 @@ class Command:
             self.arguments = components[2:]
         else:
             self.arguments = None
+
+    def parse_control_number(self, number: str):
+        if re.match(self.SEQUENCE_NUMBER_REGEX, number):
+            return int(number)
+        else:
+            raise ValueError("Sequence number does not match regex ")
 
     @staticmethod
     def validate(command: str):

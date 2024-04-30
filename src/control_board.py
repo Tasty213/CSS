@@ -8,7 +8,10 @@ class ControlBoard:
         self.power_state = PowerState.OFF
 
     def submit_command(self, command: str):
-        parsed_command = Command(command)
+        try:
+            parsed_command = Command(command)
+        except ValueError:
+            return "^ERR\n"
 
         match parsed_command.control_code:
             case ControlCodes.ECHO:
