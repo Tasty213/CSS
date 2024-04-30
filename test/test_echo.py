@@ -9,8 +9,8 @@ def test_echo_with_power_off(control_board_off: ControlBoard):
     assert response == "^E 00 OK_ OFF\n"
 
 
-def test_echo_with_power_on(controll_board_on: ControlBoard):
-    response = controll_board_on.submit_command("^E 01\n")
+def test_echo_with_power_on(control_board_on: ControlBoard):
+    response = control_board_on.submit_command("^E 01\n")
 
     assert response == "^E 01 OK_ ON\n"
 
