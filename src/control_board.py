@@ -1,6 +1,6 @@
 from command import Command
 from control_codes import ControlCodes
-from input_type import InputType
+from port_type import PortType
 from power_state import PowerState
 
 
@@ -41,17 +41,27 @@ class ControlBoard:
         return f"^{ControlCodes.POWER} {command.sequence_number} OK_\n"
 
     def input(self, command: Command):
-        input_type = command.arguments[0][0]
-        input_address_hex = command.arguments[0][1:3]
-        input_address = int(input_address_hex, base=16)
+        port_type = command.arguments[0][0]
+        port_direction = command.arguments[0][1]
+        port_address_hex = command.arguments[0][2:4]
+        port_address = int(port_address_hex, base=16)
 
-        match input_type:
-            case InputType.DIGITAL:
-                sensor_value = self.digital_inputs[input_address]
-            case InputType.ANALOGUE:
-                sensor_value = self.analogue_inputs[input_address]
+        try:
+            sensor_value = self.get_value_from_input_or_output(
+                port_direction, port_type, port_address
+            )
+        except IndexError:
+            return f"^{ControlCodes.INPUT} {command.sequence_number} RNG\n"
+
+        return f"^{ControlCodes.INPUT} {command.sequence_number} OK_ {port_type}{port_direction}{port_address_hex} {sensor_value}\n"
+
+    def get_value_from_input_or_output(self, port_direction, port_type, port_address):
+        match port_type:
+            case PortType.DIGITAL:
+                sensor_value = self.digital_inputs[port_address]
+            case PortType.ANALOGUE:
+                sensor_value = self.analogue_inputs[port_address]
                 sensor_value = f"{sensor_value:#0{10}x}"[2:]
             case _:
                 raise ValueError("Unkown sensor type parsed")
-
-        return f"^{ControlCodes.INPUT} {command.sequence_number} OK_ {input_type}{input_address_hex} {sensor_value}\n"
+        return sensor_value

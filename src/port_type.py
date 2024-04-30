@@ -1,6 +1,6 @@
 from enum import StrEnum
 
 
-class InputType(StrEnum):
+class PortType(StrEnum):
     DIGITAL = "D"
     ANALOGUE = "A"
