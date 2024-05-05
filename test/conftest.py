@@ -6,7 +6,9 @@ from environment import Environment
 
 @pytest.fixture
 def control_board_off():
-    return ControlBoard(Environment(light=False, movement=False))
+    return ControlBoard(
+        Environment(light=False, light_level=0, movement=False, distance=0)
+    )
 
 
 @pytest.fixture

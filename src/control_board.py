@@ -3,8 +3,10 @@ from control_codes import ControlCodes
 from environment import Environment
 from port_direction import PortDirection
 from port_type import PortType
-from ports.input.light_sensor import LightSensor
-from ports.input.motion_sensor import MotionSensor
+from ports.input.analogue.distance_sensor import DistanceSensor
+from ports.input.analogue.light_level_sensor import LightLevelSensor
+from ports.input.digital.light_sensor import LightSensor
+from ports.input.digital.motion_sensor import MotionSensor
 from ports.output.analogue_output import AnalogueOutput
 from ports.output.digital_output import DigitalOutput
 from ports.port import Port
@@ -15,10 +17,6 @@ class ControlBoard:
     def __init__(
         self,
         environment: Environment,
-        digital_inputs=2,
-        analogue_inputs=2,
-        digital_outputs=2,
-        analogue_outputs=2,
     ):
         self.environment = environment
         digital_outputs = [
@@ -31,7 +29,14 @@ class ControlBoard:
         ]
         self.ports = {
             PortType.ANALOGUE: {
-                PortDirection.INPUT: [0 for _ in list(range(0, analogue_inputs))],
+                PortDirection.INPUT: [
+                    LightLevelSensor(
+                        environment, digital_outputs[0], analogue_outputs[0]
+                    ),
+                    DistanceSensor(
+                        environment, digital_outputs[1], analogue_outputs[1]
+                    ),
+                ],
                 PortDirection.OUTPUT: analogue_outputs,
             },
             PortType.DIGITAL: {

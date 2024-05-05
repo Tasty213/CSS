@@ -1,4 +1,4 @@
-from ports.input.digital_input import DigitalInput
+from ports.input.digital.digital_input import DigitalInput
 
 
 class LightSensor(DigitalInput):
