@@ -1,8 +1,8 @@
 from abc import abstractmethod
-from environment import Environment
-from ports.output.analogue_output import AnalogueOutput
-from ports.output.digital_output import DigitalOutput
-from ports.port import Port
+from control_board_simulation.environment import Environment
+from control_board_simulation.ports.output.analogue_output import AnalogueOutput
+from control_board_simulation.ports.output.digital_output import DigitalOutput
+from control_board_simulation.ports.port import Port
 
 
 class DigitalInput(Port):

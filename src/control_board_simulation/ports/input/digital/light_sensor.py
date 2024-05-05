@@ -1,4 +1,4 @@
-from ports.input.digital.digital_input import DigitalInput
+from control_board_simulation.ports.input.digital.digital_input import DigitalInput
 
 
 class LightSensor(DigitalInput):

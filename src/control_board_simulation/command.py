@@ -1,5 +1,5 @@
 import re
-from control_codes import ControlCodes
+from control_board_simulation.control_codes import ControlCodes
 
 
 class Command:

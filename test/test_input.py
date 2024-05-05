@@ -1,7 +1,8 @@
 import pytest
-from control_board import ControlBoard
-from port_direction import PortDirection
-from port_type import PortType
+
+from control_board_simulation.control_board import ControlBoard
+from control_board_simulation.port_direction import PortDirection
+from control_board_simulation.port_type import PortType
 
 
 @pytest.mark.parametrize(

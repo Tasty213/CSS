@@ -1,6 +1,6 @@
 import pytest
 
-from control_board import ControlBoard
+from control_board_simulation.control_board import ControlBoard
 
 
 def test_echo_with_power_off(control_board_off: ControlBoard):

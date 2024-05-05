@@ -1,7 +1,7 @@
 import pytest
 
-from control_board import ControlBoard
-from environment import Environment
+from control_board_simulation.control_board import ControlBoard
+from control_board_simulation.environment import Environment
 
 
 @pytest.fixture

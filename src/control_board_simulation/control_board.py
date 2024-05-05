@@ -1,16 +1,18 @@
-from command import Command
-from control_codes import ControlCodes
-from environment import Environment
-from port_direction import PortDirection
-from port_type import PortType
-from ports.input.analogue.distance_sensor import DistanceSensor
-from ports.input.analogue.light_level_sensor import LightLevelSensor
-from ports.input.digital.light_sensor import LightSensor
-from ports.input.digital.motion_sensor import MotionSensor
-from ports.output.analogue_output import AnalogueOutput
-from ports.output.digital_output import DigitalOutput
-from ports.port import Port
-from power_state import PowerState
+from control_board_simulation.command import Command
+from control_board_simulation.control_codes import ControlCodes
+from control_board_simulation.environment import Environment
+from control_board_simulation.port_direction import PortDirection
+from control_board_simulation.port_type import PortType
+from control_board_simulation.ports.input.analogue.distance_sensor import DistanceSensor
+from control_board_simulation.ports.input.analogue.light_level_sensor import (
+    LightLevelSensor,
+)
+from control_board_simulation.ports.input.digital.light_sensor import LightSensor
+from control_board_simulation.ports.input.digital.motion_sensor import MotionSensor
+from control_board_simulation.ports.output.analogue_output import AnalogueOutput
+from control_board_simulation.ports.output.digital_output import DigitalOutput
+from control_board_simulation.ports.port import Port
+from control_board_simulation.power_state import PowerState
 
 
 class ControlBoard:

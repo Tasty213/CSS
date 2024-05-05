@@ -1,4 +1,4 @@
-from control_board import ControlBoard
+from control_board_simulation.control_board import ControlBoard
 
 
 def test_power_on(control_board_off: ControlBoard):

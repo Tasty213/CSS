@@ -1,4 +1,4 @@
-from ports.port import Port
+from control_board_simulation.ports.port import Port
 
 
 class AnalogueOutput(Port):

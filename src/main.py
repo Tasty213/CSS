@@ -1,4 +1,4 @@
-from control_board import ControlBoard
+from control_board_simulation.control_board import ControlBoard
 
 
 if __name__ == "__main__":
