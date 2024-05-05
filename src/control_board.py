@@ -1,22 +1,40 @@
 from command import Command
 from control_codes import ControlCodes
+from environment import Environment
 from port_direction import PortDirection
 from port_type import PortType
+from ports.input.light_sensor import LightSensor
+from ports.input.motion_sensor import MotionSensor
+from ports.output.digital_output import DigitalOutput
+from ports.port import Port
 from power_state import PowerState
 
 
 class ControlBoard:
     def __init__(
-        self, digital_inputs=2, analogue_inputs=2, digital_outputs=2, analogue_outputs=2
+        self,
+        environment: Environment,
+        digital_inputs=2,
+        analogue_inputs=2,
+        digital_outputs=2,
+        analogue_outputs=2,
     ):
+        self.environment = environment
+        digital_outputs = [
+            DigitalOutput(),
+            DigitalOutput(),
+        ]
         self.ports = {
             PortType.ANALOGUE: {
                 PortDirection.INPUT: [0 for _ in list(range(0, analogue_inputs))],
                 PortDirection.OUTPUT: [0 for _ in list(range(0, analogue_outputs))],
             },
             PortType.DIGITAL: {
-                PortDirection.INPUT: [0 for _ in list(range(0, digital_inputs))],
-                PortDirection.OUTPUT: [0 for _ in list(range(0, digital_outputs))],
+                PortDirection.INPUT: [
+                    LightSensor(environment, digital_outputs[0]),
+                    MotionSensor(environment, digital_outputs[1]),
+                ],
+                PortDirection.OUTPUT: digital_outputs,
             },
         }
         self.power_state = PowerState.OFF
@@ -48,6 +66,10 @@ class ControlBoard:
         match command.arguments[0]:
             case "0":
                 self.power_state = PowerState.OFF
+                for output in self.ports.get(PortType.DIGITAL).get(
+                    PortDirection.OUTPUT
+                ):
+                    output.state = "0"
             case "1":
                 self.power_state = PowerState.ON
 
@@ -84,6 +106,9 @@ class ControlBoard:
     def get_value_from_input_or_output(self, port_direction, port_type, port_address):
         sensor_value = self.ports.get(port_type).get(port_direction)[port_address]
 
+        if isinstance(sensor_value, Port):
+            sensor_value = sensor_value.state
+
         if port_type == PortType.ANALOGUE:
             sensor_value = f"{sensor_value:#0{10}x}"[2:]
 
@@ -92,4 +117,9 @@ class ControlBoard:
     def set_output_value(self, port_type, port_address, value):
         if port_type == PortType.ANALOGUE:
             value = int(value, base=16)
-        self.ports.get(port_type).get(PortDirection.OUTPUT)[port_address] = value
+        port = self.ports.get(port_type).get(PortDirection.OUTPUT)[port_address]
+
+        if isinstance(port, Port):
+            port.state = value
+        else:
+            self.ports.get(port_type).get(PortDirection.OUTPUT)[port_address] = value

@@ -1,11 +1,12 @@
 import pytest
 
 from control_board import ControlBoard
+from environment import Environment
 
 
 @pytest.fixture
 def control_board_off():
-    return ControlBoard()
+    return ControlBoard(Environment(light=False, movement=False))
 
 
 @pytest.fixture
