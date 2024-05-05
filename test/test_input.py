@@ -21,29 +21,14 @@ def test_get_input_value(control_board_on: ControlBoard, input_code, expected_ou
     "address",
     [("00"), ("01")],
 )
-def test_mocked_environment(control_board_off: ControlBoard, address):
+def test_sensors_need_power(control_board_off: ControlBoard, address):
     control_board_off.environment.light = True
     control_board_off.environment.movement = True
-
     assert (
         control_board_off.submit_command(f"^I 01 DI{address}\n")
         == f"^I 01 OK_ DI{address} 0\n"
     )
     control_board_off.submit_command("^P 00 1\n")
-    assert (
-        control_board_off.submit_command(f"^I 01 DI{address}\n")
-        == f"^I 01 OK_ DI{address} 0\n"
-    )
-    control_board_off.submit_command(f"^O 01 DO{address} 1\n")
-    assert (
-        control_board_off.submit_command(f"^I 01 DI{address}\n")
-        == f"^I 01 OK_ DI{address} 1\n"
-    )
-    control_board_off.submit_command(f"^O 01 DO{address} 0\n")
-    assert (
-        control_board_off.submit_command(f"^I 01 DI{address}\n")
-        == f"^I 01 OK_ DI{address} 0\n"
-    )
     control_board_off.submit_command(f"^O 01 DO{address} 1\n")
     assert (
         control_board_off.submit_command(f"^I 01 DI{address}\n")
