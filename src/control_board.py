@@ -5,6 +5,7 @@ from port_direction import PortDirection
 from port_type import PortType
 from ports.input.light_sensor import LightSensor
 from ports.input.motion_sensor import MotionSensor
+from ports.output.analogue_output import AnalogueOutput
 from ports.output.digital_output import DigitalOutput
 from ports.port import Port
 from power_state import PowerState
@@ -24,15 +25,19 @@ class ControlBoard:
             DigitalOutput(),
             DigitalOutput(),
         ]
+        analogue_outputs = [
+            AnalogueOutput(),
+            AnalogueOutput(),
+        ]
         self.ports = {
             PortType.ANALOGUE: {
                 PortDirection.INPUT: [0 for _ in list(range(0, analogue_inputs))],
-                PortDirection.OUTPUT: [0 for _ in list(range(0, analogue_outputs))],
+                PortDirection.OUTPUT: analogue_outputs,
             },
             PortType.DIGITAL: {
                 PortDirection.INPUT: [
-                    LightSensor(environment, digital_outputs[0]),
-                    MotionSensor(environment, digital_outputs[1]),
+                    LightSensor(environment, digital_outputs[0], analogue_outputs[0]),
+                    MotionSensor(environment, digital_outputs[1], analogue_outputs[1]),
                 ],
                 PortDirection.OUTPUT: digital_outputs,
             },
@@ -115,8 +120,6 @@ class ControlBoard:
         return sensor_value
 
     def set_output_value(self, port_type, port_address, value):
-        if port_type == PortType.ANALOGUE:
-            value = int(value, base=16)
         port = self.ports.get(port_type).get(PortDirection.OUTPUT)[port_address]
 
         if isinstance(port, Port):

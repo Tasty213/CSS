@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 class Port(ABC):
     def __init__(self):
-        self.power = False
+        pass
 
     @property
     @abstractmethod
