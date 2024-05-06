@@ -15,15 +15,48 @@ def test_title(qtbot: QtBot, control_board_off: ControlBoard):
 def test_submit_command_calls_control_box_simulation(
     qtbot: QtBot, control_board_off: ControlBoard
 ):
-    control_board_off.submit_command = MagicMock(return_value="^ERR\n")
+    control_board_off.submit_command = MagicMock(return_value="^P 00 OK_\n")
     window = Window(control_board_off)
     window.show()
     qtbot.addWidget(window)
 
-    window.command_input_box.setText("test")
+    window.command_input_box.setText("^P 00 1")
     window.send_command_button.click()
 
-    control_board_off.submit_command.assert_called_once_with("test\n")
+    control_board_off.submit_command.assert_called_once_with("^P 00 1\n")
     assert window.command_input_box.placeholderText() == "Input command"
     assert window.command_input_box.text() == ""
-    assert window.command_output_box.toPlainText() == "User: test\nControl: ^ERR"
+    assert (
+        window.command_output_box.toPlainText() == "User: ^P 00 1\nControl: ^P 00 OK_"
+    )
+
+
+def test_power_indicator_defaults_off(qtbot: QtBot, control_board_off: ControlBoard):
+    window = Window(control_board_off)
+    window.show()
+    qtbot.add_widget(window)
+
+    assert window.power_indicator.text() == "Power Off"
+
+
+def test_turning_on_box_switches_on_an_indicator(
+    qtbot: QtBot, control_board_off: ControlBoard
+):
+    window = Window(control_board_off)
+    window.show()
+    qtbot.add_widget(window)
+
+    window.command_input_box.setText("^P 00 1")
+    window.send_command_button.click()
+
+    assert window.power_indicator.text() == "Power On"
+
+    window.command_input_box.setText("^P 00 1")
+    window.send_command_button.click()
+
+    assert window.power_indicator.text() == "Power On"
+
+    window.command_input_box.setText("^P 00 0")
+    window.send_command_button.click()
+
+    assert window.power_indicator.text() == "Power Off"

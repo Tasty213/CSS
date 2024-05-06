@@ -1,24 +1,12 @@
 import re
-from control_board_simulation.control_codes import ControlCodes
 
 
-class Command:
+class Message:
     SEQUENCE_NUMBER_REGEX = r"^\d+$"
 
-    def __init__(self, command: str):
-        self.validate(command)
-        command = self.remove_control_characters(command)
-        components = command.split(" ")
-        self.control_code = ControlCodes(components[0])
-        self.sequence_number = components[1]
-
-        if len(components) > 2:
-            self.arguments = components[2:]
-        else:
-            self.arguments = None
-
-    def parse_control_number(self, number: str):
-        if re.match(self.SEQUENCE_NUMBER_REGEX, number):
+    @staticmethod
+    def parse_sequence_number(number: str):
+        if re.match(Message.SEQUENCE_NUMBER_REGEX, number):
             return int(number)
         else:
             raise ValueError("Sequence number does not match regex ")

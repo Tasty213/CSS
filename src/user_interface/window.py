@@ -1,6 +1,7 @@
 from PySide6 import QtWidgets
 
 from control_board_simulation.control_board import ControlBoard
+from user_interface.control_board_model import ControlBoardModel
 
 
 class Window(QtWidgets.QDialog):
@@ -14,10 +15,15 @@ class Window(QtWidgets.QDialog):
         self.command_input_box = self.create_line_edit("Input command")
         self.command_output_box = QtWidgets.QTextBrowser()
 
+        self.power_indicator = self.create_circle_label("Power Off")
+
+        self.control_board_model = ControlBoardModel(self.power_indicator.setText)
+
         mainLayout = QtWidgets.QGridLayout()
-        mainLayout.addWidget(self.command_output_box, 0, 0)
-        mainLayout.addWidget(self.command_input_box, 1, 0)
-        mainLayout.addWidget(self.send_command_button, 1, 1)
+        mainLayout.addWidget(self.power_indicator, 0, 0)
+        mainLayout.addWidget(self.command_output_box, 1, 0)
+        mainLayout.addWidget(self.command_input_box, 2, 0)
+        mainLayout.addWidget(self.send_command_button, 2, 1)
 
         self.setLayout(mainLayout)
 
@@ -25,9 +31,13 @@ class Window(QtWidgets.QDialog):
         input_command = self.command_input_box.text()
         self.command_input_box.clear()
         self.command_output_box.append(f"User: {input_command}")
-        output = self.control_board.submit_command(input_command + "\n")
+        input_command_with_newline = input_command + "\n"
+
+        output = self.control_board.submit_command(input_command_with_newline)
         output_without_newline = output.replace("\n", "")
         self.command_output_box.append(f"Control: {output_without_newline}")
+
+        self.control_board_model.update_model(input_command_with_newline, output)
 
     def create_button(self, text, member):
         button = QtWidgets.QPushButton(text)
@@ -38,3 +48,10 @@ class Window(QtWidgets.QDialog):
         text_box = QtWidgets.QLineEdit()
         text_box.setPlaceholderText(placeholder_text)
         return text_box
+
+    def create_circle_label(self, text):
+        label = QtWidgets.QLabel(text, self)
+        label.move(100, 100)
+        label.resize(80, 80)
+        label.setStyleSheet("border: 3px solid blue; border-radius: 40px;")
+        return label

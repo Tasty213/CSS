@@ -1,4 +1,5 @@
-from control_board_simulation.command import Command
+from control_board_simulation.communication_protocol.command import Command
+from control_board_simulation.communication_protocol.response import Response
 from control_board_simulation.control_codes import ControlCodes
 from control_board_simulation.environment import Environment
 from control_board_simulation.port_direction import PortDirection
@@ -13,6 +14,7 @@ from control_board_simulation.ports.output.analogue_output import AnalogueOutput
 from control_board_simulation.ports.output.digital_output import DigitalOutput
 from control_board_simulation.ports.port import Port
 from control_board_simulation.power_state import PowerState
+from control_board_simulation.status_code import StatusCode
 
 
 class ControlBoard:
@@ -51,11 +53,11 @@ class ControlBoard:
         }
         self.power_state = PowerState.OFF
 
-    def submit_command(self, command: str):
+    def submit_command(self, command: str) -> str:
         try:
-            parsed_command = Command(command)
+            parsed_command = Command.from_command(command)
         except ValueError:
-            return "^ERR\n"
+            return f"^{StatusCode.ERROR}\n"
 
         match parsed_command.control_code:
             case ControlCodes.ECHO:
@@ -71,10 +73,16 @@ class ControlBoard:
                     f"Unimplemented Control Code {parsed_command.control_code}"
                 )
 
-    def echo(self, command: Command):
-        return f"^E {command.sequence_number} OK_ {self.power_state}\n"
+    def echo(self, command: Command) -> Response:
+        response = Response(
+            sequence_number=command.sequence_number,
+            control_code=command.control_code,
+            status_code=StatusCode.OK,
+            arguments=[self.power_state],
+        )
+        return str(response)
 
-    def power(self, command: Command):
+    def power(self, command: Command) -> Response:
         match command.arguments[0]:
             case "0":
                 self.power_state = PowerState.OFF
@@ -85,9 +93,16 @@ class ControlBoard:
             case "1":
                 self.power_state = PowerState.ON
 
-        return f"^{ControlCodes.POWER} {command.sequence_number} OK_\n"
+        response = Response(
+            sequence_number=command.sequence_number,
+            control_code=ControlCodes.POWER,
+            status_code=StatusCode.OK,
+            arguments=[],
+        )
 
-    def input(self, command: Command):
+        return str(response)
+
+    def input(self, command: Command) -> Response:
         port_type = command.arguments[0][0]
         port_direction = command.arguments[0][1]
         port_address_hex = command.arguments[0][2:4]
@@ -97,12 +112,26 @@ class ControlBoard:
             sensor_value = self.get_value_from_input_or_output(
                 port_direction, port_type, port_address
             )
+            response = Response(
+                sequence_number=command.sequence_number,
+                control_code=ControlCodes.INPUT,
+                status_code=StatusCode.OK,
+                arguments=[
+                    f"{port_type}{port_direction}{port_address_hex}",
+                    sensor_value,
+                ],
+            )
         except IndexError:
-            return f"^{ControlCodes.INPUT} {command.sequence_number} RNG\n"
+            response = Response(
+                sequence_number=command.sequence_number,
+                control_code=ControlCodes.INPUT,
+                status_code=StatusCode.RANGE,
+                arguments=[],
+            )
 
-        return f"^{ControlCodes.INPUT} {command.sequence_number} OK_ {port_type}{port_direction}{port_address_hex} {sensor_value}\n"
+        return str(response)
 
-    def output(self, command: Command):
+    def output(self, command: Command) -> Response:
         port_type = command.arguments[0][0]
         port_address_hex = command.arguments[0][2:4]
         port_address = int(port_address_hex, base=16)
@@ -110,10 +139,21 @@ class ControlBoard:
 
         try:
             self.set_output_value(port_type, port_address, value_to_set)
+            response = Response(
+                sequence_number=command.sequence_number,
+                control_code=ControlCodes.OUTPUT,
+                status_code=StatusCode.OK,
+                arguments=[],
+            )
         except IndexError:
-            return f"^{ControlCodes.OUTPUT} {command.sequence_number} RNG\n"
+            response = Response(
+                sequence_number=command.sequence_number,
+                control_code=ControlCodes.OUTPUT,
+                status_code=StatusCode.RANGE,
+                arguments=[],
+            )
 
-        return f"^{ControlCodes.OUTPUT} {command.sequence_number} OK_\n"
+        return str(response)
 
     def get_value_from_input_or_output(self, port_direction, port_type, port_address):
         sensor_value = self.ports.get(port_type).get(port_direction)[port_address]
