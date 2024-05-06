@@ -172,8 +172,4 @@ class ControlBoard:
 
     def set_output_value(self, port_type, port_address, value):
         port = self.ports.get(port_type).get(PortDirection.OUTPUT)[port_address]
-
-        if isinstance(port, Port):
-            port.state = value
-        else:
-            self.ports.get(port_type).get(PortDirection.OUTPUT)[port_address] = value
+        port.state = value

@@ -2,6 +2,7 @@ from PySide6 import QtWidgets
 
 from control_board_simulation.control_board import ControlBoard
 from user_interface.control_board_model import ControlBoardModel
+from user_interface.control_box_status_bar import ControlBoxStatusWidget
 
 
 class Window(QtWidgets.QDialog):
@@ -16,11 +17,19 @@ class Window(QtWidgets.QDialog):
         self.command_output_box = QtWidgets.QTextBrowser()
 
         self.power_indicator = self.create_circle_label("Power Off")
+        self.control_box_status = ControlBoxStatusWidget()
 
-        self.control_board_model = ControlBoardModel(self.power_indicator.setText)
+        self.control_board_model = ControlBoardModel(
+            self.power_indicator.setText,
+            self.control_box_status.digital_outputs[0].set_state,
+            self.control_box_status.digital_outputs[1].set_state,
+            self.control_box_status.digital_outputs[2].set_state,
+            self.control_box_status.digital_outputs[3].set_state,
+        )
 
         mainLayout = QtWidgets.QGridLayout()
-        mainLayout.addWidget(self.power_indicator, 0, 0)
+        mainLayout.addWidget(self.control_box_status, 0, 0)
+        mainLayout.addWidget(self.power_indicator, 0, 1)
         mainLayout.addWidget(self.command_output_box, 1, 0)
         mainLayout.addWidget(self.command_input_box, 2, 0)
         mainLayout.addWidget(self.send_command_button, 2, 1)
