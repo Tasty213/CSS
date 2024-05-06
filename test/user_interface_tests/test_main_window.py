@@ -37,7 +37,7 @@ def test_power_indicator_defaults_off(qtbot: QtBot, control_board_off: ControlBo
     window.show()
     qtbot.add_widget(window)
 
-    assert window.power_indicator.text() == "Power Off"
+    assert window.control_box_status.power_indicator.text() == "Power Off"
 
 
 def test_turning_on_box_switches_on_an_indicator(
@@ -50,17 +50,17 @@ def test_turning_on_box_switches_on_an_indicator(
     window.command_input_box.setText("^P 00 1")
     window.send_command_button.click()
 
-    assert window.power_indicator.text() == "Power On"
+    assert window.control_box_status.power_indicator.text() == "Power On"
 
     window.command_input_box.setText("^P 00 1")
     window.send_command_button.click()
 
-    assert window.power_indicator.text() == "Power On"
+    assert window.control_box_status.power_indicator.text() == "Power On"
 
     window.command_input_box.setText("^P 00 0")
     window.send_command_button.click()
 
-    assert window.power_indicator.text() == "Power Off"
+    assert window.control_box_status.power_indicator.text() == "Power Off"
 
 
 @pytest.mark.parametrize(

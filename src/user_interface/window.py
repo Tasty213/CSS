@@ -16,11 +16,10 @@ class Window(QtWidgets.QDialog):
         self.command_input_box = self.create_line_edit("Input command")
         self.command_output_box = QtWidgets.QTextBrowser()
 
-        self.power_indicator = self.create_circle_label("Power Off")
         self.control_box_status = ControlBoxStatusWidget()
 
         self.control_board_model = ControlBoardModel(
-            self.power_indicator.setText,
+            self.control_box_status.power_indicator.setText,
             self.control_box_status.digital_outputs[0].set_state,
             self.control_box_status.digital_outputs[1].set_state,
             self.control_box_status.digital_outputs[2].set_state,
@@ -29,7 +28,6 @@ class Window(QtWidgets.QDialog):
 
         mainLayout = QtWidgets.QGridLayout()
         mainLayout.addWidget(self.control_box_status, 0, 0)
-        mainLayout.addWidget(self.power_indicator, 0, 1)
         mainLayout.addWidget(self.command_output_box, 1, 0)
         mainLayout.addWidget(self.command_input_box, 2, 0)
         mainLayout.addWidget(self.send_command_button, 2, 1)

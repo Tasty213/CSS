@@ -8,6 +8,15 @@ class ControlBoxStatusWidget(QtWidgets.QWidget):
         super(ControlBoxStatusWidget, self).__init__(parent)
         layout = QtWidgets.QGridLayout()
 
+        self.power_indicator = self.create_circle_label("Power Off")
+        layout.addWidget(self.power_indicator, 0, 0)
+
+        digital_outputs_layout = self.create_digital_outputs_layout()
+        layout.addLayout(digital_outputs_layout, 1, 0)
+
+        self.setLayout(layout)
+
+    def create_digital_outputs_layout(self):
         digital_outputs_layout = QtWidgets.QHBoxLayout()
         self.digital_outputs = [
             OutputPortWidget("Light Sensor"),
@@ -19,8 +28,7 @@ class ControlBoxStatusWidget(QtWidgets.QWidget):
         for digital_output in self.digital_outputs:
             digital_outputs_layout.addWidget(digital_output)
 
-        layout.addLayout(digital_outputs_layout, 0, 0)
-        self.setLayout(layout)
+        return digital_outputs_layout
 
     def create_circle_label(self, text):
         label = QtWidgets.QLabel(text, self)
