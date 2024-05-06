@@ -2,7 +2,7 @@ from PySide6 import QtWidgets
 
 import pyqtgraph as pg
 from user_interface.status_widgets.input.analogue_input_chart import (
-    AnalogueInputPortChart,
+    InputPortChart,
 )
 from user_interface.status_widgets.output.analogue_output_port_widget import (
     AnalogueOutputPortWidget,
@@ -28,6 +28,9 @@ class ControlBoxStatusWidget(QtWidgets.QWidget):
 
         analogue_inputs_layout = self.create_analogue_inputs_layout()
         layout.addLayout(analogue_inputs_layout, 3, 0)
+
+        digital_inputs_layout = self.create_digital_inputs_layout()
+        layout.addLayout(digital_inputs_layout, 4, 0)
 
         self.setLayout(layout)
 
@@ -64,13 +67,26 @@ class ControlBoxStatusWidget(QtWidgets.QWidget):
         win = pg.GraphicsLayoutWidget()
 
         self.analogue_inputs = [
-            AnalogueInputPortChart("Light Level", win),
-            AnalogueInputPortChart("Distance", win),
+            InputPortChart("Light Level", win),
+            InputPortChart("Distance", win),
         ]
 
         analogue_inputs_layout.addWidget(win)
 
         return analogue_inputs_layout
+
+    def create_digital_inputs_layout(self):
+        digital_inputs_layout = QtWidgets.QVBoxLayout()
+        win = pg.GraphicsLayoutWidget()
+
+        self.digital_inputs = [
+            InputPortChart("Light", win),
+            InputPortChart("Movement", win),
+        ]
+
+        digital_inputs_layout.addWidget(win)
+
+        return digital_inputs_layout
 
     def create_circle_label(self, text):
         label = QtWidgets.QLabel(text, self)

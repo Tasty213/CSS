@@ -1,7 +1,7 @@
 import pyqtgraph as pg
 
 
-class AnalogueInputPortChart:
+class InputPortChart:
     def __init__(self, port_name: str, win: pg.GraphicsLayoutWidget):
         self.x = []
         self.y = []

@@ -22,6 +22,8 @@ class ControlBoardModel:
         set_distance_sensor_power: Callable,
         update_light_level_sensor_output: Callable,
         update_distance_sensor_output: Callable,
+        update_light_sensor_output: Callable,
+        update_movement_sensor_output: Callable,
     ):
         self.power_on = False
         self.set_power_state = set_power_state
@@ -33,6 +35,10 @@ class ControlBoardModel:
                     set_motion_sensor_state,
                     set_light_level_sensor_state,
                     set_distance_sensor_state,
+                ],
+                PortDirection.INPUT: [
+                    update_light_sensor_output,
+                    update_movement_sensor_output,
                 ],
             },
             PortType.ANALOGUE: {
