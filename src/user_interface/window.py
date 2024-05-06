@@ -24,6 +24,10 @@ class Window(QtWidgets.QDialog):
             self.control_box_status.digital_outputs[1].set_state,
             self.control_box_status.digital_outputs[2].set_state,
             self.control_box_status.digital_outputs[3].set_state,
+            self.control_box_status.analogue_outputs[0].set_state,
+            self.control_box_status.analogue_outputs[1].set_state,
+            self.control_box_status.analogue_outputs[2].set_state,
+            self.control_box_status.analogue_outputs[3].set_state,
         )
 
         mainLayout = QtWidgets.QGridLayout()

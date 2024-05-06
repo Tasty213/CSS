@@ -15,6 +15,10 @@ class ControlBoardModel:
         set_motion_sensor_state: Callable,
         set_light_level_sensor_state: Callable,
         set_distance_sensor_state: Callable,
+        set_light_sensor_power: Callable,
+        set_motion_sensor_power: Callable,
+        set_light_level_sensor_power: Callable,
+        set_distance_sensor_power: Callable,
     ):
         self.power_on = False
         self.set_power_state = set_power_state
@@ -23,6 +27,11 @@ class ControlBoardModel:
         self.set_light_level_sensor_state = set_light_level_sensor_state
         self.set_distance_sensor_state = set_distance_sensor_state
 
+        self.set_light_sensor_power = set_light_sensor_power
+        self.set_motion_sensor_power = set_motion_sensor_power
+        self.set_light_level_sensor_power = set_light_level_sensor_power
+        self.set_distance_sensor_power = set_distance_sensor_power
+
         self.ports = {
             PortType.DIGITAL: {
                 PortDirection.OUTPUT: [
@@ -30,6 +39,14 @@ class ControlBoardModel:
                     self.set_motion_sensor_state,
                     self.set_light_level_sensor_state,
                     self.set_distance_sensor_state,
+                ],
+            },
+            PortType.ANALOGUE: {
+                PortDirection.OUTPUT: [
+                    self.set_light_sensor_power,
+                    self.set_motion_sensor_power,
+                    self.set_light_level_sensor_power,
+                    self.set_distance_sensor_power,
                 ],
             },
         }

@@ -1,6 +1,11 @@
 from PySide6 import QtWidgets
 
-from user_interface.output_port_widget import OutputPortWidget
+from user_interface.status_widgets.output.analogue_output_port_widget import (
+    AnalogueOutputPortWidget,
+)
+from user_interface.status_widgets.output.digital_output_port_widget import (
+    DigitalOutputPortWidget,
+)
 
 
 class ControlBoxStatusWidget(QtWidgets.QWidget):
@@ -14,21 +19,38 @@ class ControlBoxStatusWidget(QtWidgets.QWidget):
         digital_outputs_layout = self.create_digital_outputs_layout()
         layout.addLayout(digital_outputs_layout, 1, 0)
 
+        analogue_outputs_layout = self.create_analogue_outputs_layout()
+        layout.addLayout(analogue_outputs_layout, 2, 0)
+
         self.setLayout(layout)
 
     def create_digital_outputs_layout(self):
         digital_outputs_layout = QtWidgets.QHBoxLayout()
         self.digital_outputs = [
-            OutputPortWidget("Light Sensor"),
-            OutputPortWidget("Motion Sensor"),
-            OutputPortWidget("Light Level"),
-            OutputPortWidget("Distance"),
+            DigitalOutputPortWidget("Light Sensor"),
+            DigitalOutputPortWidget("Motion Sensor"),
+            DigitalOutputPortWidget("Light Level"),
+            DigitalOutputPortWidget("Distance"),
         ]
 
         for digital_output in self.digital_outputs:
             digital_outputs_layout.addWidget(digital_output)
 
         return digital_outputs_layout
+
+    def create_analogue_outputs_layout(self):
+        analogue_outputs_layout = QtWidgets.QHBoxLayout()
+        self.analogue_outputs = [
+            AnalogueOutputPortWidget("Light Sensor"),
+            AnalogueOutputPortWidget("Motion Sensor"),
+            AnalogueOutputPortWidget("Light Level"),
+            AnalogueOutputPortWidget("Distance"),
+        ]
+
+        for analogue_output in self.analogue_outputs:
+            analogue_outputs_layout.addWidget(analogue_output)
+
+        return analogue_outputs_layout
 
     def create_circle_label(self, text):
         label = QtWidgets.QLabel(text, self)

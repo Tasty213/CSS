@@ -16,13 +16,8 @@ class OutputPortWidget(QtWidgets.QLabel):
     def state(self):
         return self._state
 
-    @state.setter
-    def state(self, value):
-        self._state = value
-        self.setText(self.generate_label_text())
-
     def set_state(self, value):
-        self.state = int(value)
+        self.state = value
 
     def generate_label_text(self):
-        return f"{self.port_name} {"On" if self.state == 1 else "Off"}"
+        raise NotImplementedError()

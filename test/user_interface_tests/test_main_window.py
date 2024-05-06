@@ -80,3 +80,22 @@ def test_turning_on_digital_output_switches_on_and_indicator(
     window.send_command_button.click()
 
     assert "On" in window.control_box_status.digital_outputs[int(address)].text()
+
+
+@pytest.mark.parametrize(
+    "address",
+    [("00"), ("01"), ("02"), ("03")],
+)
+def test_turning_on_analogue_output_adjusts_output(
+    qtbot: QtBot, control_board_off: ControlBoard, address: str
+):
+    window = Window(control_board_off)
+    window.show()
+    qtbot.add_widget(window)
+
+    window.command_input_box.setText("^P 00 1")
+    window.send_command_button.click()
+    window.command_input_box.setText(f"^O 01 AO{address} 000000FF")
+    window.send_command_button.click()
+
+    assert "25" in window.control_box_status.analogue_outputs[int(address)].text()
