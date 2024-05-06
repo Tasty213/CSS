@@ -5,7 +5,7 @@ from control_board_simulation.ports.output.digital_output import DigitalOutput
 from control_board_simulation.ports.port import Port
 
 
-class DigitalInput(Port):
+class AnalogueInput(Port):
     def __init__(
         self,
         environment: Environment,

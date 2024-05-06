@@ -24,12 +24,13 @@ class Response(Message):
         control_code = ControlCodes(components[0])
         sequence_number = components[1]
         status_code = components[2]
+        arguments = components[3:] if len(components) > 2 else []
 
         return Response(
             sequence_number=sequence_number,
             control_code=control_code,
             status_code=status_code,
-            arguments=[],
+            arguments=arguments,
         )
 
     def __str__(self):

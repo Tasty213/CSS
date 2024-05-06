@@ -1,3 +1,4 @@
+import time
 from typing import Callable
 from control_board_simulation.communication_protocol.command import Command
 from control_board_simulation.control_codes import ControlCodes
@@ -19,34 +20,31 @@ class ControlBoardModel:
         set_motion_sensor_power: Callable,
         set_light_level_sensor_power: Callable,
         set_distance_sensor_power: Callable,
+        update_light_level_sensor_output: Callable,
+        update_distance_sensor_output: Callable,
     ):
         self.power_on = False
         self.set_power_state = set_power_state
-        self.set_light_sensor_state = set_light_sensor_state
-        self.set_motion_sensor_state = set_motion_sensor_state
-        self.set_light_level_sensor_state = set_light_level_sensor_state
-        self.set_distance_sensor_state = set_distance_sensor_state
-
-        self.set_light_sensor_power = set_light_sensor_power
-        self.set_motion_sensor_power = set_motion_sensor_power
-        self.set_light_level_sensor_power = set_light_level_sensor_power
-        self.set_distance_sensor_power = set_distance_sensor_power
 
         self.ports = {
             PortType.DIGITAL: {
                 PortDirection.OUTPUT: [
-                    self.set_light_sensor_state,
-                    self.set_motion_sensor_state,
-                    self.set_light_level_sensor_state,
-                    self.set_distance_sensor_state,
+                    set_light_sensor_state,
+                    set_motion_sensor_state,
+                    set_light_level_sensor_state,
+                    set_distance_sensor_state,
                 ],
             },
             PortType.ANALOGUE: {
                 PortDirection.OUTPUT: [
-                    self.set_light_sensor_power,
-                    self.set_motion_sensor_power,
-                    self.set_light_level_sensor_power,
-                    self.set_distance_sensor_power,
+                    set_light_sensor_power,
+                    set_motion_sensor_power,
+                    set_light_level_sensor_power,
+                    set_distance_sensor_power,
+                ],
+                PortDirection.INPUT: [
+                    update_light_level_sensor_output,
+                    update_distance_sensor_output,
                 ],
             },
         }
@@ -61,7 +59,7 @@ class ControlBoardModel:
             case ControlCodes.POWER:
                 self.update_power_state(parsed_command, parsed_response)
             case ControlCodes.INPUT:
-                pass
+                self.update_input_state(parsed_command, parsed_response)
             case ControlCodes.OUTPUT:
                 self.update_output_state(parsed_command, parsed_response)
             case _:
@@ -92,3 +90,19 @@ class ControlBoardModel:
         ]
 
         set_output_value(value_to_set)
+
+    def update_input_state(self, command: Command, response: Response):
+        if response.status_code != StatusCode.OK:
+            return
+
+        port_type = command.arguments[0][0]
+        port_address_hex = command.arguments[0][2:4]
+        port_address = int(port_address_hex, base=16)
+
+        value_base = 16 if port_type == PortType.ANALOGUE else 2
+        value_to_set = int(response.arguments[1], base=value_base)
+        set_input_value = self.ports.get(port_type).get(PortDirection.INPUT)[
+            port_address
+        ]
+
+        set_input_value(time.time(), value_to_set)

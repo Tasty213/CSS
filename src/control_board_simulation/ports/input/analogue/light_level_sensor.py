@@ -1,7 +1,7 @@
-from control_board_simulation.ports.input.digital.digital_input import DigitalInput
+from control_board_simulation.ports.input.analogue.analogue_input import AnalogueInput
 
 
-class LightLevelSensor(DigitalInput):
+class LightLevelSensor(AnalogueInput):
     @property
     def state(self):
         if self.enabled.state and self.power_supply.state >= 20:

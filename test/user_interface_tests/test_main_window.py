@@ -99,3 +99,26 @@ def test_turning_on_analogue_output_adjusts_output(
     window.send_command_button.click()
 
     assert "25" in window.control_box_status.analogue_outputs[int(address)].text()
+
+
+@pytest.mark.parametrize(
+    "address",
+    [(0), (1)],
+)
+def test_getting_analogue_input_plots_on_chart(
+    qtbot: QtBot, control_board_off: ControlBoard, address: str
+):
+    window = Window(control_board_off)
+    window.show()
+    qtbot.add_widget(window)
+
+    window.command_input_box.setText("^P 00 1")
+    window.send_command_button.click()
+    window.command_input_box.setText(f"^O 01 AO0{address + 2} 000000FF")
+    window.send_command_button.click()
+    window.command_input_box.setText(f"^O 01 DO0{address + 2} 1")
+    window.send_command_button.click()
+    window.command_input_box.setText(f"^I 01 AI0{address}")
+    window.send_command_button.click()
+
+    assert 0 in window.control_box_status.analogue_inputs[int(address)].y
