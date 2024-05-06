@@ -1,4 +1,4 @@
-from PySide6 import QtWidgets
+from PySide6 import QtWidgets, QtGui
 
 from control_board_simulation.control_board import ControlBoard
 from user_interface.control_board_model import ControlBoardModel
@@ -14,7 +14,9 @@ class Window(QtWidgets.QDialog):
         self.resize(500, 300)
         self.send_command_button = self.create_button("Send Command", self.send_command)
         self.command_input_box = self.create_line_edit("Input command")
+
         self.command_output_box = QtWidgets.QTextBrowser()
+        self.command_output_box.setFont(QtGui.QFont("Courier"))
 
         self.control_box_status = ControlBoxStatusWidget()
 
@@ -45,7 +47,7 @@ class Window(QtWidgets.QDialog):
     def send_command(self):
         input_command = self.command_input_box.text()
         self.command_input_box.clear()
-        self.command_output_box.append(f"User: {input_command}")
+        self.command_output_box.append(f"User:    {input_command}")
         input_command_with_newline = input_command + "\n"
 
         output = self.control_board.submit_command(input_command_with_newline)
@@ -56,17 +58,12 @@ class Window(QtWidgets.QDialog):
 
     def create_button(self, text, member):
         button = QtWidgets.QPushButton(text)
+        button.setFont(QtGui.QFont("Courier"))
         button.clicked.connect(member)
         return button
 
     def create_line_edit(self, placeholder_text=""):
         text_box = QtWidgets.QLineEdit()
+        text_box.setFont(QtGui.QFont("Courier"))
         text_box.setPlaceholderText(placeholder_text)
         return text_box
-
-    def create_circle_label(self, text):
-        label = QtWidgets.QLabel(text, self)
-        label.move(100, 100)
-        label.resize(80, 80)
-        label.setStyleSheet("border: 3px solid blue; border-radius: 40px;")
-        return label

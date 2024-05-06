@@ -28,7 +28,8 @@ def test_submit_command_calls_control_box_simulation(
     assert window.command_input_box.placeholderText() == "Input command"
     assert window.command_input_box.text() == ""
     assert (
-        window.command_output_box.toPlainText() == "User: ^P 00 1\nControl: ^P 00 OK_"
+        window.command_output_box.toPlainText()
+        == "User:    ^P 00 1\nControl: ^P 00 OK_"
     )
 
 
