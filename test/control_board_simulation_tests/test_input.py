@@ -79,8 +79,8 @@ def test_get_input_value_after_change_digital(control_board_on: ControlBoard):
 
 def test_get_input_value_after_change_analogue(control_board_on: ControlBoard):
     control_board_on.environment.light_level = 99545
-    control_board_on.submit_command("^O 01 DO00 1\n")
-    control_board_on.submit_command("^O 01 AO00 00000014\n")
+    control_board_on.submit_command("^O 01 DO02 1\n")
+    control_board_on.submit_command("^O 01 AO02 00000014\n")
     assert (
         control_board_on.submit_command("^I 01 AI00\n") == "^I 01 OK_ AI00 000184d9\n"
     )

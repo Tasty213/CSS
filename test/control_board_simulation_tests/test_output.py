@@ -8,10 +8,10 @@ from control_board_simulation.control_board import ControlBoard
     [
         ("^O 01 AO00 00000000\n", "^O 01 OK_\n"),
         ("^O 01 AO01 00000000\n", "^O 01 OK_\n"),
-        ("^O 01 AO02 00000000\n", "^O 01 RNG\n"),
+        ("^O 01 AO04 00000000\n", "^O 01 RNG\n"),
         ("^O 01 DO00 00000000\n", "^O 01 OK_\n"),
         ("^O 01 DO01 00000000\n", "^O 01 OK_\n"),
-        ("^O 01 DO02 00000000\n", "^O 01 RNG\n"),
+        ("^O 01 DO04 00000000\n", "^O 01 RNG\n"),
     ],
 )
 def test_ouput_returns_correct_response(

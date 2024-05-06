@@ -26,8 +26,12 @@ class ControlBoard:
         digital_outputs = [
             DigitalOutput(),
             DigitalOutput(),
+            DigitalOutput(),
+            DigitalOutput(),
         ]
         analogue_outputs = [
+            AnalogueOutput(),
+            AnalogueOutput(),
             AnalogueOutput(),
             AnalogueOutput(),
         ]
@@ -35,10 +39,10 @@ class ControlBoard:
             PortType.ANALOGUE: {
                 PortDirection.INPUT: [
                     LightLevelSensor(
-                        environment, digital_outputs[0], analogue_outputs[0]
+                        environment, digital_outputs[2], analogue_outputs[2]
                     ),
                     DistanceSensor(
-                        environment, digital_outputs[1], analogue_outputs[1]
+                        environment, digital_outputs[3], analogue_outputs[3]
                     ),
                 ],
                 PortDirection.OUTPUT: analogue_outputs,
