@@ -27,7 +27,6 @@ jobs:
       run: |
         sudo apt update && sudo apt install libegl1-mesa-dev  -y
         python -m pip install --upgrade pip
-        pip install pytest
         pip install -r requirements.txt
     - name: Test with pytest
       run: |
