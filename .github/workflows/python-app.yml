@@ -14,9 +14,9 @@ permissions:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
+    env:
+      DISPLAY: ':99.0'
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python 3.12.0
